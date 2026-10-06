@@ -1,0 +1,25 @@
+[Unit]
+Description=Chatix Corporate Messenger Server
+After=network.target postgresql.service valkey-server.service
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=chatix
+Group=chatix
+ExecStart=/opt/chatix/bin/chatix-server
+WorkingDirectory=/opt/chatix
+Restart=always
+RestartSec=5
+
+# Безопасность (Hardening)
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/chatix /var/log/chatix
+PrivateTmp=true
+
+Environment="CONFIG_PATH=/etc/chatix/config.yaml"
+
+[Install]
+WantedBy=multi-user.target

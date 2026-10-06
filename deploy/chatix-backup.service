@@ -1,0 +1,6 @@
+[Unit]
+Description=Chatix Daily Backup
+
+[Service]
+Type=oneshot
+ExecStart=/opt/chatix/deploy/backup.sh
