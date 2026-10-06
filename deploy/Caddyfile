@@ -29,7 +29,7 @@ chatix.lan {
 
     # Статика (клиентская часть)
     handle {
-        root * /opt/chatix/web/dist
+        root * /opt/chatix/client/dist
         file_server
         try_files {path} /index.html
     }

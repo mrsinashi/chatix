@@ -1,0 +1,14 @@
+/opt/chatix/desktop/src-tauri/target/debug/deps/erased_serde-724cce48283f3615.d: /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/lib.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/macros.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/any.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/de.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/error.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/features_check/mod.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/map.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/sealed.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/ser.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/private.rs
+
+/opt/chatix/desktop/src-tauri/target/debug/deps/liberased_serde-724cce48283f3615.rmeta: /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/lib.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/macros.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/any.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/de.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/error.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/features_check/mod.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/map.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/sealed.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/ser.rs /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/private.rs
+
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/lib.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/macros.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/any.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/de.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/error.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/features_check/mod.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/map.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/sealed.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/ser.rs:
+/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/erased-serde-0.4.10/src/private.rs:
