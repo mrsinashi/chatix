@@ -33,6 +33,9 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 	roleRepo := repository.NewRoleRepository(db.Pool)
 	auditRepo := repository.NewAuditRepository(db.Pool)
 
+	settingService := service.NewSettingService(db.Pool)
+	settingHandlers := handlers.NewSettingHandlers(settingService)
+
 	// Сервисы
 	authService := service.NewAuthService(
 		userRepo, sessionRepo, roleRepo, auditRepo,
@@ -52,6 +55,7 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 
 	// API
 	r.Route("/api/v1", func(r chi.Router) {
+		r.Get("/settings/system", settingHandlers.GetPublicSettings)
 		r.Post("/auth/login", authHandlers.Login)
 		r.Post("/auth/logout", authHandlers.Logout)
 		r.Get("/auth/me", authHandlers.Me)

@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
+import { useSettingsStore } from '../stores/settingsStore';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error } = useAuthStore();
+  const { system, loadSystem } = useSettingsStore();
+
+  useEffect(() => {
+    loadSystem();
+  }, [loadSystem]);
+
+  const orgName = typeof system.org_name === 'string' ? system.org_name : 'Название организации';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +34,7 @@ export default function LoginPage() {
       >
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold text-gray-900">Chatix</h1>
-          <p className="mt-1 text-sm text-gray-500">Название организации</p>
+          <p className="mt-1 text-sm text-gray-500">{orgName}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
