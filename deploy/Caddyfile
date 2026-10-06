@@ -1,33 +1,33 @@
-{
-    # Глобальные опции (админ email, отключение телеметрии)
-    admin off
-    auto_https off
-}
-
-# Замените chatix.local на ваш реальный домен
 chatix.lan {
-    # Пути к вашему внешнему сертификату (лежат в /etc/chatix/certs/)
     tls /etc/chatix/certs/chatix.lan.crt /etc/chatix/certs/chatix.lan.key
 
-    # Лимиты под загрузку файлов (ТЗ: до 4 ГБ, ставим 5 ГБ с запасом на multipart)
     request_body {
         max_size 5GB
     }
 
-    # API и WebSocket проксируются на Go-сервер
+    # Прокси для health-чеков
+    handle /healthz {
+        reverse_proxy 127.0.0.1:8080
+    }
+
+    handle /readyz {
+        reverse_proxy 127.0.0.1:8080
+    }
+
+    # API проксируется на Go-сервер
     handle /api/* {
         reverse_proxy 127.0.0.1:8080
     }
 
+    # WebSocket
     handle /ws {
         reverse_proxy 127.0.0.1:8080 {
-            # Важно для работы WebSocket
             header_up Connection {header_up.Connection}
             header_up Upgrade {header_up.Upgrade}
         }
     }
 
-    # Статика (клиентская часть)
+    # Статика клиента
     handle {
         root * /opt/chatix/client/dist
         file_server
