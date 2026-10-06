@@ -8,6 +8,7 @@ SERVICE_NAME="chatix.service"
 echo "Сборка бинарника..."
 cd "$ROOT/server"
 CGO_ENABLED=1 GOOS=linux go build -o "$BIN_DIR/chatix-server" ./cmd/server
+CGO_ENABLED=1 GOOS=linux go build -o "$BIN_DIR/chatix-cli" ./cmd/cli
 
 echo "Применение миграций..."
 # Используем goose (нужно будет установить: go install github.com/pressly/goose/v3/cmd/goose@latest)
