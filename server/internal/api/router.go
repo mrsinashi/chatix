@@ -1,10 +1,13 @@
-// internal/api/router.go
 package api
 
 import (
 	"log/slog"
 	"net/http"
+	"time"
 
+	"chatix/internal/api/handlers"
+	"chatix/internal/repository"
+	"chatix/internal/service"
 	"chatix/internal/storage"
 
 	"github.com/go-chi/chi/v5"
@@ -16,7 +19,6 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	// Простой логгер на базе slog
 	r.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			logger.Info("request", "method", r.Method, "path", r.URL.Path)
@@ -25,14 +27,34 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 	})
 	r.Use(middleware.Recoverer)
 
+	// Репозитории
+	userRepo := repository.NewUserRepository(db.Pool)
+	sessionRepo := repository.NewSessionRepository(db.Pool)
+	roleRepo := repository.NewRoleRepository(db.Pool)
+	auditRepo := repository.NewAuditRepository(db.Pool)
+
+	// Сервисы
+	authService := service.NewAuthService(
+		userRepo, sessionRepo, roleRepo, auditRepo,
+		cache.Client,
+		5,                // maxAttempts
+		5*time.Minute,    // lockDuration
+		24*time.Hour,     // sessionTTL
+	)
+	userService := service.NewUserService(userRepo, roleRepo, auditRepo)
+
+	// Обработчики
+	authHandlers := handlers.NewAuthHandlers(authService, userService)
+
+	// Технические эндпоинты
 	r.Get("/healthz", HealthHandler(db, cache))
 	r.Get("/readyz", HealthHandler(db, cache))
 
-	// Здесь позже добавим /api/v1/...
+	// API
 	r.Route("/api/v1", func(r chi.Router) {
-		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("pong"))
-		})
+		r.Post("/auth/login", authHandlers.Login)
+		r.Post("/auth/logout", authHandlers.Logout)
+		r.Get("/auth/me", authHandlers.Me)
 	})
 
 	return r
