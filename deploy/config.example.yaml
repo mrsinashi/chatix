@@ -1,0 +1,8 @@
+server:
+  listen: 127.0.0.1:8080
+
+db_url: postgres://chatix@/chatix?host=/var/run/postgresql
+valkey_addr: 127.0.0.1:6379
+
+data_dir: /var/lib/chatix
+log_level: info
