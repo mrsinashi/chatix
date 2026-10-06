@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/argon2"
+	"golang.org/x/text/unicode/norm"
 )
 
 const (
@@ -61,7 +62,12 @@ func VerifyPassword(password, encodedHash string) (bool, error) {
 	return subtle.ConstantTimeCompare(hash, expectedHash) == 1, nil
 }
 
-// NormalizeUsername приводит логин к единому формату
+// NormalizeUsername приводит логин к единому формату:
+// без лишних пробелов, без учёта регистра, «ё» → «е», Unicode NFC
 func NormalizeUsername(username string) string {
-	return strings.ToLower(strings.TrimSpace(username))
+	s := strings.TrimSpace(username)
+	s = norm.NFC.String(s)
+	s = strings.ToLower(s)
+	s = strings.ReplaceAll(s, "ё", "е")
+	return s
 }

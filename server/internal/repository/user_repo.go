@@ -27,14 +27,15 @@ func (r *UserRepository) Create(ctx context.Context, input models.UserCreate) (*
 	}
 
 	query := `
-		INSERT INTO users (username, username_normalized, password_hash, display_name, email, phone, department_id, status)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		INSERT INTO users (username, username_normalized, kind, password_hash, display_name, email, phone, department_id, status)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 		RETURNING id, created_at, updated_at
 	`
 
 	var user models.User
 	user.Username = input.Username
 	user.UsernameNormalized = normalized
+	user.Kind = models.UserKindPerson
 	user.PasswordHash = hash
 	user.DisplayName = input.DisplayName
 	user.Email = input.Email
@@ -43,7 +44,7 @@ func (r *UserRepository) Create(ctx context.Context, input models.UserCreate) (*
 	user.Status = input.Status
 
 	err = r.pool.QueryRow(ctx, query,
-		user.Username, user.UsernameNormalized, user.PasswordHash,
+		user.Username, user.UsernameNormalized, user.Kind, user.PasswordHash,
 		user.DisplayName, user.Email, user.Phone, user.DepartmentID, user.Status,
 	).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
 
@@ -56,14 +57,14 @@ func (r *UserRepository) Create(ctx context.Context, input models.UserCreate) (*
 
 func (r *UserRepository) GetByID(ctx context.Context, id string) (*models.User, error) {
 	query := `
-		SELECT id, username, username_normalized, password_hash, display_name, email, phone, department_id, status, created_at, updated_at, last_login_at
+		SELECT id, username, username_normalized, kind, password_hash, display_name, email, phone, department_id, status, created_at, updated_at, last_login_at
 		FROM users
 		WHERE id = $1
 	`
 
 	var user models.User
 	err := r.pool.QueryRow(ctx, query, id).Scan(
-		&user.ID, &user.Username, &user.UsernameNormalized, &user.PasswordHash,
+		&user.ID, &user.Username, &user.UsernameNormalized, &user.Kind, &user.PasswordHash,
 		&user.DisplayName, &user.Email, &user.Phone, &user.DepartmentID,
 		&user.Status, &user.CreatedAt, &user.UpdatedAt, &user.LastLoginAt,
 	)
@@ -79,14 +80,14 @@ func (r *UserRepository) GetByUsername(ctx context.Context, username string) (*m
 	normalized := auth.NormalizeUsername(username)
 
 	query := `
-		SELECT id, username, username_normalized, password_hash, display_name, email, phone, department_id, status, created_at, updated_at, last_login_at
+		SELECT id, username, username_normalized, kind, password_hash, display_name, email, phone, department_id, status, created_at, updated_at, last_login_at
 		FROM users
 		WHERE username_normalized = $1
 	`
 
 	var user models.User
 	err := r.pool.QueryRow(ctx, query, normalized).Scan(
-		&user.ID, &user.Username, &user.UsernameNormalized, &user.PasswordHash,
+		&user.ID, &user.Username, &user.UsernameNormalized, &user.Kind, &user.PasswordHash,
 		&user.DisplayName, &user.Email, &user.Phone, &user.DepartmentID,
 		&user.Status, &user.CreatedAt, &user.UpdatedAt, &user.LastLoginAt,
 	)

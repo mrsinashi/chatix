@@ -71,11 +71,11 @@ func (s *AuthService) Login(ctx context.Context, username, password, userAgent, 
 		return nil, nil, ErrInvalidCredentials
 	}
 
-	if user.Status == models.UserStatusLocked {
+	if user.Status == models.UserStatusBlocked {
 		return nil, nil, ErrUserLocked
 	}
 
-	if user.Status == models.UserStatusInactive {
+	if user.Status == models.UserStatusArchived {
 		return nil, nil, ErrInvalidCredentials
 	}
 
