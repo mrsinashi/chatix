@@ -25,7 +25,7 @@
 
 ## Текущий шаг
 
-M01.3: Каркас клиента — Vite + React + TypeScript + Tailwind, Zustand, TanStack Query, Dexie, Motion, заглушка экрана.
+M01.4: Каркас Tauri (desktop/) и GitHub Actions (release.yml) — сборка клиента, NSIS-установщик под Windows, публикация в Releases при теге `vX.Y.Z`.
 
 ## Принятые решения
 
