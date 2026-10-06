@@ -25,7 +25,7 @@
 
 ## Текущий шаг
 
-M02.7: Приведение схемы данных в соответствие с ТЗ (новые поля в `users`, `sessions`, `user_roles`; таблицы `user_contacts`, `setting_defs`, `setting_values`). Нормализация логина по ТЗ (регистр, «ё» → «е», Unicode NFC).
+M02.8: Переход на систему настроек по ТЗ (setting_defs, setting_values с резолвом по уровням: system, department, user).
 
 ## Принятые решения
 

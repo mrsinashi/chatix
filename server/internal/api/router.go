@@ -33,7 +33,7 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 	roleRepo := repository.NewRoleRepository(db.Pool)
 	auditRepo := repository.NewAuditRepository(db.Pool)
 
-	settingService := service.NewSettingService(db.Pool)
+	settingService := service.NewSettingServiceV2(db.Pool)
 	settingHandlers := handlers.NewSettingHandlers(settingService)
 
 	// Сервисы
