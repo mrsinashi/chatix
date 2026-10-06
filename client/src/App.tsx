@@ -1,17 +1,32 @@
-import { motion } from 'motion/react'
+import { useEffect } from 'react';
+import { useAuthStore } from './stores/authStore';
+import LoginPage from './pages/LoginPage';
 
 export default function App() {
+  const { isAuthenticated, checkSession, user, logout } = useAuthStore();
+
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
+
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-center"
-      >
-        <h1 className="text-3xl font-semibold text-gray-900">Chatix</h1>
-        <p className="mt-2 text-gray-500">Клиент загружен. Каркас готов.</p>
-      </motion.div>
+      <div className="text-center">
+        <h1 className="text-2xl font-semibold text-gray-900">Chatix</h1>
+        <p className="mt-2 text-gray-500">
+          Добро пожаловать, {user?.display_name}!
+        </p>
+        <button
+          onClick={logout}
+          className="mt-4 text-sm text-blue-600 hover:text-blue-700"
+        >
+          Выйти
+        </button>
+      </div>
     </div>
-  )
+  );
 }
