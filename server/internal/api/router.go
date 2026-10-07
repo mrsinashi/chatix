@@ -95,7 +95,7 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 
 		// Управление пользователями требует права `user.manage`
 		r.Group(func(r chi.Router) {
-			r.Use(middleware.RequirePermission(userService, "user.manage"))
+			r.Use(middleware.RequirePermission(userService, "users.manage"))
 			r.Get("/users", adminUserHandlers.ListUsers)
 			r.Patch("/users/{userID}", adminUserHandlers.UpdateUser)
 			r.Post("/users/{userID}/set-password", adminUserHandlers.SetPassword)
