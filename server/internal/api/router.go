@@ -47,10 +47,11 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 		5*time.Minute,    // lockDuration
 		24*time.Hour,     // sessionTTL
 	)
-	userService := service.NewUserService(userRepo, roleRepo, auditRepo)
+	userService := service.NewUserService(userRepo, roleRepo, auditRepo, sessionRepo)
 
 	// Обработчики
 	authHandlers := handlers.NewAuthHandlers(authService, userService)
+	adminUserHandlers := handlers.NewAdminUserHandlers(userService)
 
 	// Технические эндпоинты
 	r.Get("/healthz", HealthHandler(db, cache))
@@ -90,6 +91,19 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 			r.Use(middleware.RequirePermission(userService, "settings.manage"))
 			r.Put("/settings/{key}", settingsAdminHandlers.SetSetting)
 			r.Delete("/settings/{key}", settingsAdminHandlers.DeleteSetting)
+		})
+
+		// Управление пользователями требует права `user.manage`
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.RequirePermission(userService, "user.manage"))
+			r.Get("/users", adminUserHandlers.ListUsers)
+			r.Patch("/users/{userID}", adminUserHandlers.UpdateUser)
+			r.Post("/users/{userID}/set-password", adminUserHandlers.SetPassword)
+			r.Post("/users/{userID}/block", adminUserHandlers.BlockUser)
+			r.Post("/users/{userID}/unblock", adminUserHandlers.UnblockUser)
+			r.Get("/users/{userID}/sessions", adminUserHandlers.GetUserSessions)
+			r.Delete("/users/{userID}/sessions/{sessionID}", adminUserHandlers.RevokeSession)
+			r.Delete("/users/{userID}/sessions", adminUserHandlers.RevokeAllSessions)
 		})
 	})
 

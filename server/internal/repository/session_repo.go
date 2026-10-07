@@ -90,6 +90,37 @@ func (r *SessionRepository) DeleteByUserID(ctx context.Context, userID string) e
 	return nil
 }
 
+// ListByUserID возвращает все сессии пользователя
+func (r *SessionRepository) ListByUserID(ctx context.Context, userID string) ([]*models.Session, error) {
+	query := `
+		SELECT id, user_id, token_hash, user_agent, ip_address, created_at, expires_at
+		FROM sessions
+		WHERE user_id = $1
+		ORDER BY created_at DESC
+	`
+
+	rows, err := r.pool.Query(ctx, query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("запрос сессий: %w", err)
+	}
+	defer rows.Close()
+
+	var sessions []*models.Session
+	for rows.Next() {
+		var session models.Session
+		err := rows.Scan(
+			&session.ID, &session.UserID, &session.TokenHash,
+			&session.UserAgent, &session.IPAddress, &session.CreatedAt, &session.ExpiresAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("чтение сессии: %w", err)
+		}
+		sessions = append(sessions, &session)
+	}
+
+	return sessions, nil
+}
+
 func hashToken(token string) string {
 	hash := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(hash[:])
