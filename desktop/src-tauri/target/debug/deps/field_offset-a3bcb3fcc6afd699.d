@@ -1,5 +1,0 @@
-/opt/chatix/desktop/src-tauri/target/debug/deps/field_offset-a3bcb3fcc6afd699.d: /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/field-offset-0.3.6/src/lib.rs
-
-/opt/chatix/desktop/src-tauri/target/debug/deps/libfield_offset-a3bcb3fcc6afd699.rmeta: /root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/field-offset-0.3.6/src/lib.rs
-
-/root/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/field-offset-0.3.6/src/lib.rs:
