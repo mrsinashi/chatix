@@ -13,7 +13,7 @@ export default function LoginPage() {
     loadSystem();
   }, [loadSystem]);
 
-  const orgName = typeof system.org_name === 'string' ? system.org_name : 'Название организации';
+  const orgName = typeof system['org.name'] === 'string' ? system['org.name'] : 'Название организации';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

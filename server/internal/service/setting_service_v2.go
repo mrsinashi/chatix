@@ -49,16 +49,12 @@ func (s *SettingServiceV2) GetSystemSettings(ctx context.Context) (map[string]js
 // пользовательские переопределяют системные.
 func (s *SettingServiceV2) GetUserSettings(ctx context.Context, userID string) (map[string]json.RawMessage, error) {
 	query := `
-		WITH user_settings AS (
-			SELECT sv.key, sv.value
-			FROM setting_values sv
-			JOIN setting_defs sd ON sd.key = sv.key
-			WHERE sv.scope_type = 'user' AND sv.scope_id = $1
-		)
-		SELECT sd.key, COALESCE(us.value, sd.default_value)
+		SELECT sd.key, COALESCE(sv.value, sd.default_value)
 		FROM setting_defs sd
-		LEFT JOIN user_settings us ON us.key = sd.key
-		WHERE 'user' = ANY(sd.scopes)
+		LEFT JOIN setting_values sv ON sv.key = sd.key 
+			AND sv.scope_type = 'user' 
+			AND sv.scope_id = $1
+		WHERE 'system' = ANY(sd.scopes) OR 'user' = ANY(sd.scopes)
 	`
 
 	rows, err := s.pool.Query(ctx, query, userID)
@@ -99,14 +95,21 @@ func (s *SettingServiceV2) SetSystemSetting(ctx context.Context, key string, val
 
 // SetUserSetting устанавливает пользовательскую настройку.
 func (s *SettingServiceV2) SetUserSetting(ctx context.Context, userID, key string, value json.RawMessage) error {
+	// Проверяем, что настройка существует и поддерживает пользовательский уровень
+	var exists bool
+	err := s.pool.QueryRow(ctx, `SELECT 'user' = ANY(scopes) FROM setting_defs WHERE key = $1`, key).Scan(&exists)
+	if err != nil || !exists {
+		return fmt.Errorf("настройка %s не поддерживает пользовательский уровень", key)
+	}
+
 	query := `
 		INSERT INTO setting_values (key, scope_type, scope_id, value, changed_by, changed_at)
 		VALUES ($1, 'user', $2, $3, $2, now())
-		ON CONFLICT (key, scope_type, scope_id) DO UPDATE 
+		ON CONFLICT (key, scope_type, scope_id) DO UPDATE
 		SET value = $3, changed_by = $2, changed_at = now()
 	`
 
-	_, err := s.pool.Exec(ctx, query, key, userID, value)
+	_, err = s.pool.Exec(ctx, query, key, userID, value)
 	if err != nil {
 		return fmt.Errorf("установка пользовательской настройки: %w", err)
 	}

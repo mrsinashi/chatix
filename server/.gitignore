@@ -1,0 +1,8 @@
+# Бинарники
+bin/
+chatix-server
+chatix-cli
+
+# Временные файлы
+*.tmp
+*.temp

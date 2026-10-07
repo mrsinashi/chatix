@@ -1,0 +1,6 @@
+# Cargo
+/target/
+
+# Временные файлы
+*.tmp
+*.temp

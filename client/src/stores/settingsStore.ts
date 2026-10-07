@@ -21,7 +21,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       set({ system: settings, loaded: true, isLoading: false });
 
       // Обновляем заголовок окна
-      const orgName = typeof settings.org_name === 'string' ? settings.org_name : 'Название организации';
+    const orgName = typeof settings['org.name'] === 'string' ? settings['org.name'] : 'Название организации';
       document.title = `Chatix – ${orgName}`;
     } catch {
       set({ isLoading: false, loaded: true });

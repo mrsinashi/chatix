@@ -37,6 +37,7 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 	settingService := service.NewSettingServiceV2(db.Pool)
 	settingHandlers := handlers.NewSettingHandlers(settingService)
 	settingsAdminHandlers := handlers.NewSettingsAdminHandlers(settingService)
+	userSettingsHandlers := handlers.NewUserSettingsHandlers(settingService)
 
 	// Сервисы
 	authService := service.NewAuthService(
@@ -63,8 +64,17 @@ func NewRouter(db *storage.Postgres, cache *storage.Valkey, logger *slog.Logger)
 		r.Get("/auth/me", authHandlers.Me)
 	})
 
-	// Админские эндпоинты (требуют авторизации и прав)
+	// Пользовательские настройки (требуют авторизации)
 	authMiddleware := middleware.Auth(authService)
+	r.Route("/api/v1/settings", func(r chi.Router) {
+		r.Use(authMiddleware)
+		r.Get("/", userSettingsHandlers.GetUserSettings)
+		r.Get("/{key}", userSettingsHandlers.GetUserSetting)
+		r.Put("/{key}", userSettingsHandlers.SetUserSetting)
+		r.Delete("/{key}", userSettingsHandlers.DeleteUserSetting)
+	})
+
+	// Админские эндпоинты (требуют авторизации и прав)
 	r.Route("/api/v1/admin", func(r chi.Router) {
 		r.Use(authMiddleware)
 

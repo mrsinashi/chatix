@@ -1,8 +1,8 @@
 const API_BASE = '/api/v1';
 
 export interface SystemSettings {
-  org_name?: string;
-  default_theme?: string;
+  'org.name'?: string;
+  'client.theme'?: string;
   [key: string]: unknown;
 }
 
