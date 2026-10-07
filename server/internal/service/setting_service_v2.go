@@ -128,3 +128,18 @@ func (s *SettingServiceV2) DeleteUserSetting(ctx context.Context, userID, key st
 
 	return nil
 }
+
+// DeleteSystemSetting удаляет системное переопределение настройки (возврат к дефолту).
+func (s *SettingServiceV2) DeleteSystemSetting(ctx context.Context, key string) error {
+	query := `
+		DELETE FROM setting_values
+		WHERE key = $1 AND scope_type = 'system'
+	`
+
+	_, err := s.pool.Exec(ctx, query, key)
+	if err != nil {
+		return fmt.Errorf("удаление системной настройки: %w", err)
+	}
+
+	return nil
+}
